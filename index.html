@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESL Crossword Race</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+        <button id="btn-teacher-mode" class="btn-teacher-mode">Teacher Mode</button>
+        <div class="app-header">
+            <h1>ESL Crossword Race</h1>
+        </div>
+
+        <div class="team-setup">
+            <h2>Team Setup</h2>
+
+            <!-- Team A -->
+            <div class="team-card" data-team="A">
+                <h3>Team A</h3>
+                <div class="team-selectors">
+                    <div class="selector-group">
+                        <label>Adjective</label>
+                        <select id="adj-a"></select>
+                    </div>
+                    <div class="selector-group">
+                        <label>Animal</label>
+                        <select id="animal-a"></select>
+                    </div>
+                    <button class="btn-randomize" data-team="A">Randomize</button>
+                </div>
+                <div class="team-preview" id="preview-a">
+                    <span class="team-icon" id="icon-a"></span>
+                    <span class="team-name-text" id="name-a">Team A</span>
+                </div>
+            </div>
+
+            <!-- Team B -->
+            <div class="team-card" data-team="B">
+                <h3>Team B</h3>
+                <div class="team-selectors">
+                    <div class="selector-group">
+                        <label>Adjective</label>
+                        <select id="adj-b"></select>
+                    </div>
+                    <div class="selector-group">
+                        <label>Animal</label>
+                        <select id="animal-b"></select>
+                    </div>
+                    <button class="btn-randomize" data-team="B">Randomize</button>
+                </div>
+                <div class="team-preview" id="preview-b">
+                    <span class="team-icon" id="icon-b"></span>
+                    <span class="team-name-text" id="name-b">Team B</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="round-select">
+            <label>
+                Select Round:
+                <select id="round-select">
+                    <option value="">-- Select a round --</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="home-actions">
+            <button id="btn-start-game">Start Game</button>
+        </div>
+
+        <footer class="app-footer">
+            <span>&copy; 2026 YouTeacher</span>
+        </footer>
+    </div>
+
+    <!-- TEACHER SCREEN -->
+    <div id="screen-teacher" class="screen">
+        <h1>Teacher Mode</h1>
+
+        <div class="teacher-workflow-banner">
+            <strong>Create</strong> &rarr; <strong>Freeze</strong> &rarr; <strong>Print</strong> &rarr; <strong>Play</strong>
+            <span class="workflow-hint">Create rounds, export to freeze them, print worksheets, then play in class.</span>
+        </div>
+
+        <button id="btn-exit-teacher">Exit Teacher Mode</button>
+        <button id="btn-new-round">+ New Round</button>
+        <button id="btn-print-worksheets">Print Worksheets</button>
+        <button id="btn-export-frozen">Export Frozen Rounds</button>
+        <button id="btn-instructions">Instructions</button>
+
+        <div id="frozen-info" class="frozen-info">
+            <strong>Frozen rounds will always match printed worksheets.</strong>
+        </div>
+
+        <!-- CSV Upload Section -->
+        <div id="csv-upload-section">
+            <h2>Create Rounds from CSV</h2>
+            <p>Upload a CSV file with format: <code>word,clue</code> (one per line)</p>
+
+            <div class="csv-controls">
+                <label>
+                    CSV File:
+                    <input type="file" id="csv-file-input" accept=".csv,.txt">
+                </label>
+                <label>
+                    Topic Name:
+                    <input type="text" id="csv-topic-name" placeholder="e.g. Friends & Free Time">
+                </label>
+                <label>
+                    Words per round:
+                    <input type="number" id="words-per-round" value="10" min="4" max="20">
+                </label>
+                <label>
+                    Number of rounds:
+                    <input type="number" id="num-rounds" value="2" min="1" max="10">
+                </label>
+                <button id="btn-generate-from-csv" disabled>Generate Rounds</button>
+            </div>
+
+            <div id="csv-preview"></div>
+        </div>
+
+        <h2>Saved Rounds</h2>
+        <div id="teacher-round-list">
+            <p>No rounds saved yet.</p>
+        </div>
+
+        <!-- Round Editor -->
+        <div id="round-editor">
+            <h2>Edit Round</h2>
+
+            <div>
+                <label>
+                    Round Name:
+                    <input type="text" id="round-name" placeholder="e.g. Animals Unit 3">
+                </label>
+            </div>
+
+            <div id="editor-error"></div>
+
+            <div class="team-words">
+                <h3>Team A Words</h3>
+                <div id="word-list-a"></div>
+                <button id="btn-add-word-a">+ Add Word</button>
+            </div>
+
+            <div class="team-words">
+                <h3>Team B Words</h3>
+                <div id="word-list-b"></div>
+                <button id="btn-add-word-b">+ Add Word</button>
+            </div>
+
+            <div id="editor-actions">
+                <button id="btn-save-round">Save Round</button>
+            </div>
+        </div>
+
+        <footer class="app-footer teacher-footer">
+            <img src="assets/logo.svg" alt="YouTeacher" class="teacher-footer-logo">
+            <div class="teacher-footer-text">
+                <span class="teacher-footer-name">YouTeacher</span>
+                <a href="https://youteacher.org" target="_blank" rel="noopener">youteacher.org</a>
+                <a href="https://youteacher.org/discord" target="_blank" rel="noopener">Join our Discord</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="screen-game" class="screen">
+        <div id="game-container"></div>
+    </div>
+
+    <!-- ROUND RESULT SCREEN (after each round) -->
+    <div id="screen-win" class="screen">
+        <div class="win-content">
+            <div class="win-animal" id="win-animal"></div>
+            <h1 class="win-title" id="win-title">Team WIN!</h1>
+            <div class="win-times">
+                <div class="win-round-times" id="win-round-times"></div>
+                <div class="win-total-time" id="win-total-time"></div>
+            </div>
+            <div class="win-buttons">
+                <button id="btn-next-round" class="btn-win btn-win-primary">Play Next Round</button>
+                <button id="btn-play-again" class="btn-win btn-win-primary">Play Again</button>
+                <button id="btn-choose-round" class="btn-win btn-win-secondary">Choose Different Round</button>
+                <button id="btn-end-tournament" class="btn-win btn-win-danger">End Tournament</button>
+                <button id="btn-view-leaderboard" class="btn-win btn-win-secondary">View Leaderboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOURNAMENT END SCREEN (dramatic final results) -->
+    <div id="screen-tournament-end" class="screen">
+        <div class="tournament-end-content">
+            <div class="tournament-animal" id="tournament-animal"></div>
+            <h1 class="tournament-title" id="tournament-title">CHAMPIONS!</h1>
+            <div class="tournament-stats" id="tournament-stats"></div>
+            <div class="tournament-buttons">
+                <button id="btn-tournament-leaderboard" class="btn-win btn-win-primary">View Leaderboard</button>
+                <button id="btn-tournament-home" class="btn-win btn-win-secondary">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD SCREEN -->
+    <div id="screen-leaderboard" class="screen">
+        <div class="leaderboard-screen-content">
+            <h1 class="leaderboard-screen-title">Leaderboard</h1>
+            <div id="leaderboard-full"></div>
+            <div class="leaderboard-buttons">
+                <button id="btn-back-to-results" class="btn-win btn-win-secondary">Back to Results</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSTRUCTIONS MODAL -->
+    <div id="modal-instructions" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <button id="btn-close-instructions" class="modal-close">&times;</button>
+            <h2>ESL Crossword Race &mdash; How It Works</h2>
+
+            <div class="instructions-step">
+                <h3>Step 1 &mdash; Create</h3>
+                <p>Upload a CSV file with word/clue pairs, name the topic, and generate rounds. Each round splits words between two teams.</p>
+            </div>
+
+            <div class="instructions-step">
+                <h3>Step 2 &mdash; Freeze</h3>
+                <p>Freeze rounds before class. Frozen rounds permanently match printed worksheets and cannot be edited.</p>
+            </div>
+
+            <div class="instructions-step">
+                <h3>Step 3 &mdash; Print</h3>
+                <p>Use the Print button on each frozen worksheet. Hand out printed sheets to students.</p>
+            </div>
+
+            <div class="instructions-step">
+                <h3>Step 4 &mdash; Play</h3>
+                <p>Select a frozen round from the dropdown. Start the tournament. Teams race to complete their crosswords!</p>
+            </div>
+
+            <div class="instructions-warning">
+                <strong>Important:</strong> If you edit a round after printing but before freezing, the worksheet may not match the game.
+            </div>
+
+            <p class="instructions-footer">
+                More free resources: <a href="https://youteacher.org/discord" target="_blank" rel="noopener">youteacher.org/discord</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- PRINT CONTAINER (hidden on screen, visible in print) -->
+    <div id="print-container"></div>
+
+    <!-- Frozen rounds data (loaded from USB if available) -->
+    <script src="data/frozen-rounds.js" onerror="window.FROZEN_ROUNDS=null;"></script>
+
+    <script src="js/storage.js"></script>
+    <script src="js/crossword-generator.js"></script>
+    <script src="js/team-data.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
